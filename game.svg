@@ -1,0 +1,140 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="360" height="480"
+     xmlns="http://www.w3.org/2000/svg">
+
+    <script type="text/javascript">
+        // <![CDATA[]
+        const KEYS = {left: 37,  up: 38, right: 39, down: 40};
+        const svg = "http://www.w3.org/2000/svg";
+        const svgElement = document.getElementsByTagName('svg')[0];
+        const width = parseInt(svgElement.getAttributeNS(null, "width"));
+        const height = parseInt(svgElement.getAttributeNS(null, "height"));
+
+        let moveleft = false;
+        let moveright = false;
+
+
+
+        blocks = [];
+        for(let i = 0; i < 10; i++){
+            for(let j = 0; j < 4; j++){
+                block = addRect(i * 30 + 20, j * 10 + 10, 24, 8);
+                blocks.push(block);
+
+            }
+        }
+
+        player = addRect( width / 2 - 32, height - 64, 64, 8);
+        ball = {rect: addRect(width/2 -4, height-80, 8,8), dx: 4, dy: -4};
+
+        document.addEventListener('keydown', event => {
+            switch(event.keyCode){
+                case KEYS.left:
+                    moveleft = true;
+                break;
+                case KEYS.right:
+                    moveright = true;
+                break;
+
+            }
+        }, false);
+        document.addEventListener('keyup', event => {
+            switch(event.keyCode){
+                case KEYS.left:
+                    moveleft = false;
+                break;
+                case KEYS.right:
+                    moveright=false;
+                break;
+
+            }
+        }, false);
+
+        setInterval(update, 1000/30);
+
+        function update(){
+            updatePlayer();
+            updateBall();
+        }
+
+        function updatePlayer(){
+            const dims = getDimensions(player);
+            if(moveleft && moveright) {
+                return;
+            }
+
+            if(moveleft && dims.x >= 8){
+                moveRect(player, -8, 0);
+            } else if(moveright && dims.x + dims.w + 8 <= width) {
+                moveRect(player, 8,0);
+            }
+
+        }
+        function updateBall() {
+            moveRect(ball.rect, ball.dx, ball.dy);
+            const dims = getDimensions(ball.rect);
+            if(dims.x < 0 || dims.x + dims.w > width){
+                ball.dx = -ball.dx;
+            }
+
+            if(dims.y < 0){
+                ball.dy = -ball.dy;
+            }
+
+            if(dims.y > height){
+                console.log("game over");
+            }
+
+            const playerDims = getDimensions(player);
+            /*
+            if((playerDims.x < dims.x < playerDims.x + playerDims.h || playerDims.x < dims.x +dims.h < playerDims.x + playerDims.h)
+                && ( playerDims.y < dims.y < playerDims.x + playerDims.h || playerDims.y < dims.y + dims.h < playerDims.y + playerDims.h)){
+                    ball.dy = -ball.dy;
+                }
+            */
+
+            if
+
+            for (let i = 0 ; i < blocks.length; i++){
+
+            }
+        }
+
+        function addRect(x,y,w,h) {
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+            rect.setAttributeNS(null, "x", x.toString());
+            rect.setAttributeNS(null, "y", y.toString());
+            rect.setAttributeNS(null, "height", h.toString());
+            rect.setAttributeNS(null, "width", w.toString());
+            rect.setAttributeNS(null, "fill", "green");
+
+
+            svgElement.appendChild(rect);
+
+            return rect;
+        }
+
+        function getDimensions(rect) {
+            const x = parseInt(rect.getAttributeNS(null, "x"));
+            const y = parseInt(rect.getAttributeNS(null, "y"));
+            const w = parseInt(rect.getAttributeNS(null, "width"));
+            const h = parseInt(rect.getAttributeNS(null, "height"));
+            return {x,y,w,h};
+
+        }
+
+        function moveRect(rect, diffX, diffY){
+            const dims = getDimensions(rect);
+            const x = dims.x + diffX;
+            const y = dims.y + diffY;
+
+            rect.setAttributeNS(null, "x", x.toString());
+            rect.setAttributeNS(null, "y", y.toString());
+        }
+
+
+        //]]>
+    </script>
+</svg>
